@@ -75,8 +75,8 @@ tests/              unit tests and an end-to-end train → evaluate → caption 
 
 ### 1. Install
 ```bash
-git clone https://github.com/PiyushaKadam07/image-captioning-transformer.git
-cd image-captioning-transformer
+git clone https://github.com/PiyushaKadam07/Image-Captioning-Transformer.git
+cd Image-Captioning-Transformer
 pip install -r requirements.txt
 ```
 METEOR and the official COCO tokenizer need Java. Without it, the other metrics still run.
