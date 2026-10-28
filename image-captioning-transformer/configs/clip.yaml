@@ -1,0 +1,17 @@
+# Upgrade: CLIP ViT-B/32 image encoder + GPT-2 decoder.
+model:
+  encoder: clip
+  clip_name: openai/clip-vit-base-patch32
+data:
+  train: data/train.jsonl
+  val: data/val.jsonl
+  test: data/test.jsonl
+  image_root: data/images
+train:
+  epochs: 15                     # one random caption per image per epoch
+  batch_size: 64
+  lr_decoder: 1.0e-4
+  lr_encoder: 5.0e-6
+  freeze_encoder_epochs: 4
+  unfreeze_last_blocks: 2        # fine-tunes the last 2 transformer blocks
+  output_dir: runs/clip

@@ -1,0 +1,16 @@
+# Baseline: reproduces the original course project (ResNet-50 encoder + GPT-2 decoder).
+model:
+  encoder: resnet50
+data:
+  train: data/train.jsonl
+  val: data/val.jsonl
+  test: data/test.jsonl
+  image_root: data/images        # folder containing train2014/ and val2014/
+train:
+  epochs: 15                     # one random caption per image per epoch
+  batch_size: 64
+  lr_decoder: 1.0e-4
+  lr_encoder: 1.0e-5
+  freeze_encoder_epochs: 4
+  unfreeze_last_blocks: 1        # fine-tunes ResNet layer4
+  output_dir: runs/resnet50
