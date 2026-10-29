@@ -3,6 +3,7 @@
 Usage:
     python scripts/evaluate.py --checkpoint runs/clip/best.pt
     python scripts/evaluate.py --checkpoint runs/clip/best.pt --beam-size 1   # greedy, for the ablation table
+    python scripts/evaluate.py --checkpoint /kaggle/input/.../best.pt --out-dir /kaggle/working/eval/resnet50
 """
 import argparse
 import json
@@ -23,6 +24,9 @@ def main():
     ap.add_argument("--split", default="test", choices=["val", "test"])
     ap.add_argument("--beam-size", type=int, default=None)
     ap.add_argument("--limit", type=int, default=None, help="Score only N images")
+    ap.add_argument("--out-dir", default=None,
+                    help="Where to write results (default: next to the checkpoint; "
+                         "use this when the checkpoint is in a read-only folder)")
     args = ap.parse_args()
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -33,7 +37,8 @@ def main():
                                   limit=args.limit, beam_size=beam)
 
     name = f"{args.split}_beam{beam}"
-    out = Path(args.checkpoint).parent
+    out = Path(args.out_dir) if args.out_dir else Path(args.checkpoint).parent
+    out.mkdir(parents=True, exist_ok=True)
     json.dump({"encoder": cfg["model"]["encoder"], "split": args.split, "beam_size": beam,
                "images": len(hyps), "scores": scores}, open(out / f"{name}_metrics.json", "w"), indent=2)
     json.dump([{"image_id": k, "caption": v} for k, v in hyps.items()],
