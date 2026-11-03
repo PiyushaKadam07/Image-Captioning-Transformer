@@ -24,8 +24,27 @@ def caption_image(model, tok, cfg, image: Image.Image, device="cpu", beam_size=N
                                 beam_size=beam_size or d["beam_size"], max_len=d["max_len"],
                                 length_penalty=d["length_penalty"], no_repeat_ngram=d["no_repeat_ngram"],
                                 return_attention=True)
-    words = [tok.decode([t]).strip() for t in toks]
-    return tok.decode(toks).strip(), words, attn
+    words, maps = merge_subwords([tok.decode([t]) for t in toks], attn)
+    return tok.decode(toks).strip(), words, maps
+
+
+def merge_subwords(pieces: list[str], attn: torch.Tensor):
+    """Join GPT-2 sub-word pieces into whole words ("t" + "eddy" -> "teddy").
+
+    A piece that starts with a space begins a new word; any other piece continues the
+    previous one. Each word's attention map is the average over its pieces.
+    """
+    words, groups = [], []
+    for i, piece in enumerate(pieces):
+        if not words or piece.startswith(" ") or not piece.strip():
+            words.append(piece.strip())
+            groups.append([i])
+        else:
+            words[-1] += piece
+            groups[-1].append(i)
+    if not groups:
+        return [], attn
+    return words, torch.stack([attn[g].mean(dim=0) for g in groups])
 
 
 def main():

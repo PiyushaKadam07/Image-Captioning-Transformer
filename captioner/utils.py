@@ -60,7 +60,7 @@ def attention_to_grid(attn_row: torch.Tensor) -> np.ndarray:
     return grid / (grid.max() + 1e-8)
 
 
-def plot_attention(image, words: list[str], attn: torch.Tensor, path: str, max_words: int = 12) -> None:
+def plot_attention(image, words: list[str], attn: torch.Tensor, path: str, max_words: int = 23) -> None:
     """Save a figure showing which image regions each generated word attended to."""
     import matplotlib
     matplotlib.use("Agg")
