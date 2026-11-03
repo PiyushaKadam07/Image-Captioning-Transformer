@@ -2,9 +2,11 @@
 
 Generates natural-language captions for images by pairing a pretrained image encoder (**ResNet-50** or **CLIP ViT-B/32**) with a **GPT-2** decoder that attends to image regions through cross-attention. It shows, word by word, which part of the image the model looked at.
 
-This is a rebuilt and extended version of our Kent State University course project *Image Captioning Using Transformer* (see [Credits](#credits)). The original ResNet-50 + GPT-2 model reached **0.395 CIDEr** on MS COCO after 6 epochs. This version keeps that model as a baseline and adds a CLIP encoder, a standard benchmark split, a stronger training recipe and a demo.
+This is a rebuilt and extended version of our Kent State University course project *Image Captioning Using Transformer* (see [Credits](#credits)). This version keeps the original ResNet-50 + GPT-2 design as a baseline and adds a CLIP encoder, a standard 5,000-image test split, the official COCO evaluation, a stronger training recipe and a demo.
 
-> **Status:** code complete and tested on synthetic data. Full MS COCO results will be added after training (see [Results](#results)).
+**ResNet-50 + GPT-2 result:** 1.028 CIDEr and 0.309 BLEU-4 on 5,000 held-out MS COCO test images.
+
+> **Status:** ResNet-50 model trained and evaluated (see [Results](#results)). CLIP model training in progress.
 
 ---
 
@@ -39,15 +41,20 @@ caption so far ──► GPT-2 (self-attention + cross-attention to regions) ─
 
 ## Results
 
-*To be filled in after training on MS COCO (Karpathy test split, 5,000 images).* `python scripts/results_table.py runs` prints this table from the evaluation outputs.
+MS COCO 2014, 5,000 held-out test images (5,000 val + 5,000 test drawn from `val2014` with a fixed seed, following the Karpathy recipe), scored with the official COCO caption toolkit. `python scripts/results_table.py <eval folder>` prints this table from the evaluation outputs.
 
-| Encoder | Decoding | BLEU-4 | METEOR | ROUGE-L | CIDEr |
-|---|---|---|---|---|---|
-| ResNet-50 | greedy | | | | |
-| ResNet-50 | beam 3 | | | | |
-| CLIP ViT-B/32 | greedy | | | | |
-| CLIP ViT-B/32 | beam 3 | | | | |
-| *Original course project (ResNet-50, custom split)* | *beam* | *0.31* | *0.27* | *0.54* | *0.395* |
+| Encoder | Decoding | BLEU-1 | BLEU-4 | METEOR | ROUGE-L | CIDEr |
+|---|---|---|---|---|---|---|
+| ResNet-50 | greedy | 0.725 | 0.302 | 0.259 | 0.536 | 0.993 |
+| ResNet-50 | beam 3 | 0.710 | **0.309** | **0.269** | **0.540** | **1.028** |
+| CLIP ViT-B/32 | greedy | *training* | | | | |
+| CLIP ViT-B/32 | beam 3 | *training* | | | | |
+
+**Training:** 15 epochs on a free Kaggle GPU (about 4 hours). The encoder was frozen for 4 epochs, then its last block was fine-tuned. Validation CIDEr (1,000 images, greedy) rose from 0.85 after epoch 1 to 1.00 after epoch 5, right after fine-tuning began, and peaked at 1.05.
+
+**Beam search vs greedy:** beam search improves CIDEr (+0.035), BLEU-4, METEOR and ROUGE-L, at a small cost in BLEU-1. It favours slightly shorter, more precise captions.
+
+**About the original course project's numbers:** the original report listed BLEU-4 0.31, METEOR 0.27 and ROUGE-L 0.54, close to this rebuild, but CIDEr 0.395. Models at this BLEU-4 level typically score around 1.0 CIDEr, so the original figure was most likely computed on a different scale or setup. The two CIDEr values should not be compared directly.
 
 ## Project structure
 
