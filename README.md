@@ -1,5 +1,9 @@
 # Image Captioning with a Vision Encoder and GPT-2
 
+![Demo: the CLIP model captioning MS COCO images, with word-by-word attention maps](assets/demo.gif)
+
+*The CLIP model captioning MS COCO test images: "a living room filled with furniture and a large window", "a baseball player holding a bat on top of a field", "a woman holding up a smart phone in front of her face". Each panel shows where the model looked while writing that word.*
+
 Generates natural-language captions for images by pairing a pretrained image encoder (**ResNet-50** or **CLIP ViT-B/32**) with a **GPT-2** decoder that attends to image regions through cross-attention. It shows, word by word, which part of the image the model looked at.
 
 This is a rebuilt and extended version of our Kent State University course project *Image Captioning Using Transformer* (see [Credits](#credits)). This version keeps the original ResNet-50 + GPT-2 design as a baseline and adds a CLIP encoder, a standard 5,000-image test split, the official COCO evaluation, a stronger training recipe and a demo.
