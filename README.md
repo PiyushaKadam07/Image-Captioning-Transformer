@@ -45,7 +45,7 @@ MS COCO 2014, 5,000 held-out test images (5,000 val + 5,000 test drawn from `val
 |---|---|---|---|---|---|---|
 | ResNet-50 | greedy | 0.725 | 0.302 | 0.259 | 0.536 | 0.993 |
 | ResNet-50 | beam 3 | 0.710 | **0.309** | **0.269** | **0.540** | **1.028** |
-| CLIP ViT-B/32 | greedy | *pending* | | | | |
+| CLIP ViT-B/32 | greedy | **0.749** | 0.327 | 0.274 | 0.555 | 1.091 |
 | CLIP ViT-B/32 | beam 3 | **0.734** | **0.333** | **0.283** | **0.560** | **1.117** |
 
 **Training:** each model trained for 15 epochs on a free Kaggle GPU (about 3–4 hours). The encoder was frozen for 4 epochs, then its last block(s) were fine-tuned at a lower learning rate.
@@ -54,7 +54,7 @@ MS COCO 2014, 5,000 held-out test images (5,000 val + 5,000 test drawn from `val
 
 **ResNet-50 vs CLIP:** CLIP improves every metric (CIDEr +0.089, BLEU-4 +0.024, METEOR +0.014, ROUGE-L +0.020). Only the image encoder changed between the two runs, so the gain comes from CLIP's image features, which were pretrained to match images with text.
 
-**Beam search vs greedy:** beam search improves CIDEr (+0.035), BLEU-4, METEOR and ROUGE-L, at a small cost in BLEU-1. It favours slightly shorter, more precise captions.
+**Beam search vs greedy:** for both encoders, beam search improves CIDEr (ResNet-50 +0.035, CLIP +0.026), BLEU-4, METEOR and ROUGE-L, at a small cost in BLEU-1. It favours slightly shorter, more precise captions.
 
 ### Example: where the model looks for each word
 
