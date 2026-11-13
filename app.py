@@ -1,7 +1,11 @@
 """Gradio demo: upload an image, get a caption and word-by-word attention maps.
 
 Run locally:   CHECKPOINT=runs/clip/best.pt python app.py
-On Hugging Face Spaces, upload best.pt next to this file (or set CHECKPOINT).
+
+On Hugging Face Spaces, the model is downloaded from a Hugging Face model repo. Set these in the
+Space's Settings -> Variables:
+    CHECKPOINT_REPO = <your-username>/<model-repo>   (for example piyushakadam07/image-captioning-clip)
+    CHECKPOINT_FILE = clip_best.pt                    (the file name inside that repo)
 """
 import os
 import tempfile
@@ -12,7 +16,16 @@ import torch
 from captioner.utils import get_tokenizer, load_checkpoint, plot_attention
 from scripts.caption import caption_image
 
-CHECKPOINT = os.environ.get("CHECKPOINT", "best.pt")
+def resolve_checkpoint() -> str:
+    """Use a local file if given, otherwise download it from a Hugging Face model repo."""
+    repo = os.environ.get("CHECKPOINT_REPO")
+    if repo:
+        from huggingface_hub import hf_hub_download
+        return hf_hub_download(repo_id=repo, filename=os.environ.get("CHECKPOINT_FILE", "clip_best.pt"))
+    return os.environ.get("CHECKPOINT", "best.pt")
+
+
+CHECKPOINT = resolve_checkpoint()
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 model, cfg = load_checkpoint(CHECKPOINT, DEVICE)
 tok = get_tokenizer(cfg)
