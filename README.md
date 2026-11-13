@@ -1,6 +1,6 @@
 # Image Captioning with a Vision Encoder and GPT-2
 
-![Demo: the CLIP model captioning MS COCO images, with word-by-word attention maps](assets/demo.gif)
+![Demo: the CLIP model captioning MS COCO images, with word-by-word attention maps](assets/demo.webp)
 
 *The CLIP model captioning MS COCO test images: "a living room filled with furniture and a large window", "a baseball player holding a bat on top of a field", "a woman holding up a smart phone in front of her face". Each panel shows where the model looked while writing that word.*
 
