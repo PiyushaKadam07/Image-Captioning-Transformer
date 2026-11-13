@@ -1,4 +1,4 @@
-# Image Captioning with a Vision Encoder and GPT-2
+# Image Captioning: ResNet-50 vs CLIP with GPT-2
 
 ![Demo: the CLIP model captioning MS COCO images, with word-by-word attention maps](assets/demo.webp)
 
