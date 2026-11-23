@@ -76,6 +76,14 @@ The same MS COCO image captioned by both models. Each panel shows the image regi
 
 CLIP describes the main object more specifically ("brown teddy bear"), but here the ResNet-50 caption describes the scene more accurately: the toy is in a basket, not on a bag. CLIP's attention is also more spread out. "Teddy" and "bear" focus on the fur, but the later words drift to the basket edge. CLIP's patch features mix information from across the whole image, so its attention maps are less tied to individual objects than ResNet-50's local grid. **Higher average scores don't guarantee a better caption for every image, or more interpretable attention.**
 
+### Example: a new photo from outside the dataset
+
+My own photo of a street at sunset, which isn't part of MS COCO, captioned by the CLIP model with `scripts/caption.py`: *"a street scene with cars parked in front of a building"*
+
+![CLIP attention maps on a new photo](assets/new_photo_attention.png)
+
+The caption describes the scene correctly. "Parked" focuses on the cars in the lot, "in" spreads over the cars and the building, and "of a building" moves to the building on the left. The glowing street lamp on the left stays bright in almost every panel: very bright spots tend to draw this model's attention whatever the word. Like the COCO captions it learned from, it describes the objects and the place and leaves out the sunset.
+
 **About the original course project's numbers:** the original report listed BLEU-4 0.31, METEOR 0.27 and ROUGE-L 0.54, close to this rebuild, but CIDEr 0.395. Models at this BLEU-4 level typically score around 1.0 CIDEr, so the original figure was most likely computed on a different scale or setup. The two CIDEr values should not be compared directly.
 
 ## Project structure
